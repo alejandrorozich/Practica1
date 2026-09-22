@@ -55,7 +55,7 @@ function App() {
   }
 
   function removeFromCart(item) {
-    setCart(cart.filter((c) => c.category !== item.category))
+    setCart((prev) => prev.filter((c) => c.id !== item.id))
   }
 
   function checkout() {
