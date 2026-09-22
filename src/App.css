@@ -93,6 +93,11 @@ select {
   cursor: pointer;
 }
 
+.add-btn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
 .cart {
   position: fixed;
   top: 0;

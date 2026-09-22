@@ -108,7 +108,12 @@ function App() {
 
         <div className="grid">
           {visibleProducts.map((p) => (
-            <ProductCard key={p.id} product={p} onAdd={() => addToCart(p)} />
+            <ProductCard
+              key={p.id}
+              product={p}
+              stock={p.stock - (cart.find((item) => item.id === p.id)?.quantity ?? 0)}
+              onAdd={() => addToCart(p)}
+            />
           ))}
         </div>
       </main>
