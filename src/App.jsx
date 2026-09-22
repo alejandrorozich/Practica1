@@ -29,8 +29,7 @@ function App() {
   }, [search])
 
   function addToCart(product) {
-    cart.push({ ...product, quantity: 1 })
-    setCart(cart)
+    setCart((prev) => [...prev, { ...product, quantity: 1 }])
   }
 
   function changeQty(index, delta) {
