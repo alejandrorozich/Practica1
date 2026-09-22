@@ -12,20 +12,30 @@ function App() {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('all')
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [showCart, setShowCart] = useState(false)
 
   useEffect(() => {
+    const controller = new AbortController()
     setLoading(true)
+    setError(null)
     const url = search
       ? `${API_URL}/search?q=${encodeURIComponent(search)}`
       : `${API_URL}?limit=30`
 
-    fetch(url)
+    fetch(url, { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products)
         setLoading(false)
       })
+      .catch((err) => {
+        if (err.name === 'AbortError') return
+        setError('No se pudieron cargar los productos.')
+        setLoading(false)
+      })
+
+    return () => controller.abort()
   }, [search])
 
   function addToCart(product) {
@@ -73,6 +83,8 @@ function App() {
     .filter((p) => category === 'all' || p.category === category)
     .filter((p) => p.title.toLowerCase().includes(search.toLowerCase()))
 
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
+
   return (
     <div className="app">
       <header className="header">
@@ -98,14 +110,16 @@ function App() {
           ))}
         </select>
         <button className="cart-btn" onClick={() => setShowCart(!showCart)}>
-          Carrito ({cart.length})
+          Carrito ({cartCount})
         </button>
       </header>
 
       <main>
         {loading && <p className="loading">Cargando...</p>}
 
-        {!loading && visibleProducts.length === 0 && <p>Sin resultados.</p>}
+        {error && <p className="error">{error}</p>}
+
+        {!loading && !error && visibleProducts.length === 0 && <p>Sin resultados.</p>}
 
         <div className="grid">
           {visibleProducts.map((p) => (
