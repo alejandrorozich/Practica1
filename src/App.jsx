@@ -31,7 +31,10 @@ function App() {
   function addToCart(product) {
     setCart((prev) => {
       const existing = prev.find((item) => item.id === product.id)
-      if (!existing) return [...prev, { ...product, quantity: 1 }]
+      if (!existing) {
+        return product.stock < 1 ? prev : [...prev, { ...product, quantity: 1 }]
+      }
+      if (existing.quantity >= product.stock) return prev
       return prev.map((item) =>
         item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
       )
@@ -39,10 +42,16 @@ function App() {
   }
 
   function changeQty(index, delta) {
-    const updated = cart.map((item, i) =>
-      i === index ? { ...item, quantity: item.quantity + delta } : item
+    setCart((prev) =>
+      prev.map((item, i) =>
+        i === index
+          ? {
+              ...item,
+              quantity: Math.min(Math.max(item.quantity + delta, 1), item.stock),
+            }
+          : item
+      )
     )
-    setCart(updated)
   }
 
   function removeFromCart(item) {
