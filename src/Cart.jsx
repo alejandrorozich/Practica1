@@ -12,11 +12,19 @@ function Cart({ items, total, onQty, onRemove, onCheckout }) {
             <span className="cart-title">{item.title}</span>
             <span>${item.price.toFixed(2)}</span>
             <div className="qty">
-              <button aria-label="Quitar uno" onClick={() => onQty(index, -1)}>
+              <button
+                aria-label="Quitar uno"
+                onClick={() => onQty(index, -1)}
+                disabled={item.quantity <= 1}
+              >
                 -
               </button>
               <span>{item.quantity}</span>
-              <button aria-label="Agregar uno" onClick={() => onQty(index, 1)}>
+              <button
+                aria-label="Agregar uno"
+                onClick={() => onQty(index, 1)}
+                disabled={item.quantity >= item.stock}
+              >
                 +
               </button>
             </div>

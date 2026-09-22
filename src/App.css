@@ -138,6 +138,11 @@ select {
   gap: 8px;
 }
 
+.qty button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .remove {
   color: #b00020;
 }

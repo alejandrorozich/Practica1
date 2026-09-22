@@ -105,7 +105,7 @@ function App() {
           <option value="all">Todas</option>
           {CATEGORIES.map((c) => (
             <option key={c} value={c}>
-              {c}
+              {c.charAt(0).toUpperCase() + c.slice(1)}
             </option>
           ))}
         </select>
